@@ -7,3 +7,22 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+# Seed categories
+MealDbClient.new.list(kind: "c")["meals"].each do |category|
+  MealCategory.find_or_create_by!(name: category["strCategory"])
+end
+
+# Seed meals by category
+MealCategory.find_each do |category|
+  meals = MealDbClient.new.filter_by(category: category.name)["meals"]
+  next if meals.blank?
+
+  meals.each do |meal|
+    Meal.find_or_create_by!(name: meal["strMeal"], category: category) do |m|
+      m.image_url = meal["strMealThumb"]
+      m.external_id = meal["idMeal"]
+      m.external_service = "meal_db"
+    end
+  end
+end

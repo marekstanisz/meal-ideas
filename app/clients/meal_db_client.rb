@@ -28,7 +28,7 @@ class MealDbClient
   def perform_request(endpoint, params:)
     response = connection.get(endpoint, params)
 
-    return "" if response.body.blank?
+    return {} if response.body.blank?
     JSON.parse(response.body)
   end
 
