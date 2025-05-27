@@ -3,11 +3,15 @@ class MealDbClient
   MEAL_DB_API_KEY = "1" # ideally, it would have been loaded from ENV or via secrets
 
   def lookup(meal_id:)
-    perform_request("lookup.php", params: { i: meal_id })
+    MealDb::Meal.new(
+      perform_request("lookup.php", params: { i: meal_id })["meals"]&.first || {}
+    )
   end
 
   def random
-    perform_request("random.php")
+    MealDb::Meal.new(
+      perform_request("random.php")["meals"]&.first || {}
+    )
   end
 
   # a for list of areas
@@ -25,7 +29,7 @@ class MealDbClient
 
   private
 
-  def perform_request(endpoint, params:)
+  def perform_request(endpoint, params: {})
     response = connection.get(endpoint, params)
 
     return {} if response.body.blank?
