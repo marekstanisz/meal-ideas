@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_26_171307) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_26_203920) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
+
   create_table "meal_categories", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -25,6 +28,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_26_171307) do
     t.string "external_service"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "instructions"
+    t.jsonb "ingredients"
     t.index ["category_id"], name: "index_meals_on_category_id"
   end
 
